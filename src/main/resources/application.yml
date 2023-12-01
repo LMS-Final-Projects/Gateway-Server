@@ -1,0 +1,92 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: LMS-GATEWAY
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"  # 여기에 모든 허용하는 origin을 나열
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        - id: auth-server-filter
+          uri: "lb://AUTH-SERVER"
+          predicates:
+            - Path=/api/v1/test/**, /api/v1/auth/reissue, /api/v1/auth/info
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: auth-server
+          uri: "lb://AUTH-SERVER"
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: lms-server
+          uri: "lb://LMS-SERVER"
+          predicates:
+            - Path=/api/v1/lms/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+        - id: lms-server-noToken
+          uri: "lb://LMS-SERVER"
+          predicates:
+            - Path=/api/v1/major/**
+
+        - id: lms-server2
+          uri: "lb://LMS-SERVER"
+          predicates:
+            - Path=/api/v1/grade/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+        - id: notice-server
+          uri: "lb://NOTICE-SERVER"
+          predicates:
+            - Path=/api/v1/board/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+        - id: mail-server
+          uri: "lb://MAIL-SERVER"
+          predicates:
+            - Path=/api/v1/mail/**, /api/v1/member/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,beans,refresh
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+  instance:
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
