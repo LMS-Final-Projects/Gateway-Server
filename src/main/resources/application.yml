@@ -37,7 +37,7 @@ spring:
         - id: board-server
           uri: "lb://BOARD-SERVER"
           predicates:
-            - Path=/api/v1/notices/** , /api/v1/boards/** ,/api/v1/replies/**,/api/v1/comments/**, /api/v1/manager/**
+            - Path=/api/v1/notices/** , /api/v1/classes/** ,/api/v1/replies/**,/api/v1/comments/**, /api/v1/manager/boards/**, /api/v1/manager/notices/**
           filters:
             - name: "TokenFilter"
               args:
@@ -46,7 +46,7 @@ spring:
         - id: post-server
           uri: "lb://POST-SERVER"
           predicates:
-            - Path=/api/v1/post/**, /api/v1/member/**
+            - Path=/api/v1/post/**
           filters:
             - name: "TokenFilter"
               args:
@@ -55,7 +55,7 @@ spring:
         - id: lecture-server
           uri: "lb://LECTURE-SERVER"
           predicates:
-            - Path=/api/v1/lectures/**, /api/v1/manager/**
+            - Path=/api/v1/lectures/**, /api/v1/manager/lectures/**
           filters:
             - name: "TokenFilter"
               args:
@@ -64,7 +64,7 @@ spring:
         - id: student-server
           uri: "lb://STUDENT-SERVER"
           predicates:
-            - Path=/api/v1/student/**, /api/v1/manager/**
+            - Path=/api/v1/student/**, /api/v1/manager/students/**
           filters:
             - name: "TokenFilter"
               args:
@@ -73,7 +73,7 @@ spring:
         - id: professor-server
           uri: "lb://PROFESSOR-SERVER"
           predicates:
-            - Path=/api/v1/professor/**, /api/v1/manager/**
+            - Path=/api/v1/professor/**, /api/v1/manager/professors/**
           filters:
             - name: "TokenFilter"
               args:
