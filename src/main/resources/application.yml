@@ -20,58 +20,74 @@ spring:
             allowedHeaders: "*"
             allowCredentials: true
       routes:
-        - id: auth-server-filter
+        - id: auth-service
           uri: "lb://AUTH-SERVER"
           predicates:
-            - Path=/api/v1/test/**, /api/v1/auth/reissue, /api/v1/auth/info
-          filters:
-            - name: "TokenFilter"
-              args:
-                logging: false
-        - id: auth-server
-          uri: "lb://AUTH-SERVER"
+            - Path=/api/v1/member/**, /api/v1/major/**
+
+        - id: application-server
+          uri: "lb://APPLICATION-SERVER"
           predicates:
-            - Path=/api/v1/auth/**
-        - id: lms-server
-          uri: "lb://LMS-SERVER"
-          predicates:
-            - Path=/api/v1/lms/**
+            - Path=/api/v1/application/**, /api/v1/manager/application/**
           filters:
             - name: "TokenFilter"
               args:
                 logging: false
 
-        - id: lms-server-noToken
-          uri: "lb://LMS-SERVER"
+        - id: board-server
+          uri: "lb://BOARD-SERVER"
           predicates:
-            - Path=/api/v1/major/**
-
-        - id: lms-server2
-          uri: "lb://LMS-SERVER"
-          predicates:
-            - Path=/api/v1/grade/**
+            - Path=/api/v1/notices/** , /api/v1/classes/** ,/api/v1/replies/**,/api/v1/comments/**, /api/v1/manager/boards/**, /api/v1/manager/notices/**
           filters:
             - name: "TokenFilter"
               args:
                 logging: false
 
-        - id: notice-server
-          uri: "lb://NOTICE-SERVER"
+        - id: post-server
+          uri: "lb://POST-SERVER"
           predicates:
-            - Path=/api/v1/board/**
+            - Path=/api/v1/post/**
           filters:
             - name: "TokenFilter"
               args:
                 logging: false
 
-        - id: mail-server
-          uri: "lb://MAIL-SERVER"
+        - id: lecture-server
+          uri: "lb://LECTURE-SERVER"
           predicates:
-            - Path=/api/v1/mail/**, /api/v1/member/**
+            - Path=/api/v1/lectures/**, /api/v1/manager/lectures/**
           filters:
             - name: "TokenFilter"
               args:
                 logging: false
+
+        - id: student-server
+          uri: "lb://STUDENT-SERVER"
+          predicates:
+            - Path=/api/v1/student/**, /api/v1/manager/students/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+        - id: professor-server
+          uri: "lb://PROFESSOR-SERVER"
+          predicates:
+            - Path=/api/v1/professor/**, /api/v1/manager/professors/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+        - id: schedule-server
+          uri: "lb://SCHEDULE-SERVER"
+          predicates:
+            - Path=/api/v1/schedule/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
 
 
 
